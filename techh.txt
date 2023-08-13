@@ -1,0 +1,6 @@
+i am sdding a list of tschnologies i hav eto practice and learn
+
+react
+node
+express
+mongo db

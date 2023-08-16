@@ -125,9 +125,21 @@
 			e.preventDefault();
 			let name = document.querySelector('#name').value;
 			let email = document.querySelector('#email').value;
-			let newArray = [name,email];
-			localStorage.setItem('user', JSON.stringify(newArray));
-		})
+			//let newArray = [name,email];
+			const userInfo = localStorage.getItem('user');
+			  
+					
+			if(userInfo){
+				newArray = JSON.parse(userInfo);
+				
+			}
+			else{
+				newArray = [];
+			}
+			newArray.push(name,email);
+			/* in chrome, it is throwing an error that push can't be read or */
+			localStorage.setItem("user",JSON.stringify(newArray));
+			})
 	</script>
   </body>
 </html>

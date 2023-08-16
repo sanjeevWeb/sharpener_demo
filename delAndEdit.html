@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JS For Beginners</title>
+	
+	<style>
+		.user {
+		  border: 1px solid #ccc;
+		  padding: 10px;
+		  margin: 5px 0;
+		  display: flex;
+		  justify-content: space-between;
+		}
+
+		.editButton,
+		.deleteButton {
+		  background-color: #007bff;
+		  color: #fff;
+		  border: none;
+		  padding: 5px 10px;
+		  cursor: pointer;
+		  margin-left: 5px;
+		}
+
+		.editButton:hover,
+		.deleteButton:hover {
+		  background-color: #0056b3;
+		}
+
+	</style>
+   </head>	
+   <body>
+		<header>
+			<h1>Form data</h1>
+		</header>
+		<form id="userForm">
+			  <label for="name">Name:</label>
+			  <input type="text" id="name" required><br><br>
+			  
+			  <label for="email">Email:</label>
+			  <input type="email" id="email" required><br><br>
+			  
+			  <button type="submit">Add User</button>
+		</form>
+
+		<div id="userList"></div>
+	<script>
+		// Function to add a new user to localStorage
+		function addUserToLocalStorage(name, email) {
+		  const users = getUsersFromLocalStorage();
+		  users.push({ name, email });
+		  localStorage.setItem('users', JSON.stringify(users));
+		}
+
+		// Function to retrieve users from localStorage
+		function getUsersFromLocalStorage() {
+		  return JSON.parse(localStorage.getItem('users')) || [];
+		}
+
+		// Function to display users in the DOM
+		function displayUsers() {
+		  const userList = document.getElementById('userList');
+		  userList.innerHTML = '';
+
+		  const users = getUsersFromLocalStorage();
+
+		  users.forEach((user, index) => {
+			const userDiv = document.createElement('div');
+			userDiv.classList.add('user');
+
+			const userContent = `
+			  <span>${user.name}</span>
+			  <span>${user.email}</span>
+			  <!-- <button class="editButton" data-index="${index}">Edit</button> -->
+			  <button class="deleteButton" data-index="${index}">Delete</button>
+			`;
+
+			userDiv.innerHTML = userContent;
+			userList.appendChild(userDiv);
+		  });
+
+		  addEditDeleteListeners();
+		}
+
+		 <!-- /Function to handle form submission -->
+		function handleFormSubmit(event) {
+		  event.preventDefault();
+
+		  const name = document.getElementById('name').value;
+		  const email = document.getElementById('email').value;
+
+		  addUserToLocalStorage(name, email);
+		  displayUsers();
+
+		  document.getElementById('userForm').reset();
+		}
+
+		<!-- // Function to delete a user from localStorage -->
+		function deleteUserFromLocalStorage(index) {
+		  const users = getUsersFromLocalStorage();
+		  users.splice(index, 1);
+		  localStorage.setItem('users', JSON.stringify(users));
+		}
+
+		<!-- // Function to add event listeners to edit and delete buttons -->
+		function addEditDeleteListeners() {
+		  const editButtons = document.querySelectorAll('.editButton');
+		  const deleteButtons = document.querySelectorAll('.deleteButton');
+
+		  editButtons.forEach(button => {
+			button.addEventListener('click', handleEditClick);
+		  });
+
+		  deleteButtons.forEach(button => {
+			button.addEventListener('click', handleDeleteClick);
+		  });
+		}
+
+		<!-- // Function to handle edit button click -->
+		function handleEditClick(event) {
+		  const index = event.target.dataset.index;
+		  const users = getUsersFromLocalStorage();
+		  
+		  const newName = prompt('Edit Name:', users[index].name);
+		  const newEmail = prompt('Edit Email:', users[index].email);
+		  
+		  if (newName && newEmail) {
+			users[index].name = newName;
+			users[index].email = newEmail;
+			
+			localStorage.setItem('users', JSON.stringify(users));
+			displayUsers();
+		  }
+		}
+
+		<!-- // Function to handle delete button click -->
+		function handleDeleteClick(event) {
+		  const index = event.target.dataset.index;
+		  deleteUserFromLocalStorage(index);
+		  displayUsers();
+		}
+
+		// Initialize the app
+		function init() {
+		  displayUsers();
+
+		  const userForm = document.getElementById('userForm');
+		  userForm.addEventListener('submit', handleFormSubmit);
+		}
+
+		init();
+
+	</script>
+   </body>
+</html>

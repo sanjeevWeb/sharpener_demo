@@ -1,60 +1,174 @@
-<!--
-<head>
-
-<h1> Title </h1>
-
-</head>
-
-<body>
-
-<input type="text" name="Name" />
-
-<input type="button" value="Submit" />
-
-</body> -->
-
-
-
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-  <title>Item Lister</title>
-</head>
-<body>
-  <header id="main-header" class="bg-success text-white p-4 mb-3">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  </head>
+  <body>
     <div class="container">
-      <h1 id="header-title">Item Lister <span style="display:none">123</span></h1>
+      <h1>Expence Tracker!</h1>  
+      <div>
+        <form id="completeForm">
+          <div class="row mb-3">
+            <label for="inputAmount" class="col-sm-2 col-form-label">Amount</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="inputAmount">
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="inputTitle" class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="inputTitle">
+            </div>
+          </div>
+          <fieldset class="row mb-3">
+            <legend class="col-form-label col-sm-2 pt-0">Category</legend>
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+                <label class="form-check-label" for="gridRadios1">
+                  category 1
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+                <label class="form-check-label" for="gridRadios2">
+                  category 2
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="option3">
+                <label class="form-check-label" for="gridRadios3">
+                  category 3
+                </label>
+              </div>
+            </div>
+          </fieldset>
+          
+          <button type="submit" class="btn btn-primary">Add Expence</button>
+</form>
+      </div>
     </div>
-  </header>
-  <div class="container">
-   <div id="main" class="card card-body">
-    <h2 class="title" id="tochange">Add Items</h2>
-    <form class="form-inline mb-3">
-      <input type="text" class="form-control mr-2">
-      <input type="submit" class="btn btn-dark" value="Submit">
-    </form>
-    <h2 class="title">Items</h2>
-    <ul id="items" class="list-group">
-      <li class="list-group-item">Item 1</li>
-      <li class="list-group-item">Item 2</li>
-      <li class="list-group-item">Item 3</li>
-      <li class="list-group-item">Item 4</li>
-    </ul>
-   </div>
-  </div>
-	<script>
-		console.log(document.getElementById('items'));
-		console.log(document.title);
-		document.title = "List to be done";
-		let bordercol = document.getElementById('main-header');
-		bordercol.style.borderBottom = "2px solid #000";
-		let tochange = document.getElementById('tochange');
-		tochange.style.color = "green";
-	</script>
-</body>
+      <hr>
+    <div class="container">
+      <h3>Expence History</h3>
+      <ul id="showUl">
+        <!-- <li>id,Amount,title,category <button>edit</button> <button>delete</button></li> -->
+        
+      </ul>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      console.log('sharpener project');
+const inputAmount = document.querySelector('#inputAmount');
+const inputTitle = document.querySelector('#inputTitle');
+const category = document.querySelectorAll('.form-check .form-check-input');
+const showUl = document.querySelector('#showUl');
+let dataArray = [];
+
+function getFromLocalStorage(){
+  return JSON.parse(localStorage.getItem('formData')) || [];
+}
+
+function saveToLocalStorage(newdata){
+  dataArray = getFromLocalStorage();
+  dataArray.push(newdata);
+  localStorage.setItem('formData', JSON.stringify(dataArray));
+}
+
+function updateLocalStorage(dataArray) {
+    localStorage.setItem('formData', JSON.stringify(dataArray));
+}
+const completeForm = document.querySelector('#completeForm');
+
+completeForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  let catValue;
+  // Array.from(category);
+  // for(let categ in category){
+  //  if(categ.value === 'option1'){
+  //    catValue = 'category_1';
+  //  }
+  //  else if(categ.value === 'option2'){
+  //    catValue = 'category_2';
+  //  }
+  //  else{
+  //    catValue = 'category_3';
+  //  }
+
+  // }
+  for (let cat of category) {
+        if (cat.checked) {
+            catValue = cat.value;
+            break;
+        }
+    }
+  if(inputTitle.value === '' || inputAmount.value === ''){
+    alert('please fill out all the fields');
+  }
+  const formObj = {
+    amount:inputAmount.value,
+    title: inputTitle.value,
+    categ: catValue
+  }
+  console.log(formObj);
+  saveToLocalStorage(formObj);
+
+    inputAmount.value = '';
+    inputTitle.value = '';
+
+    displayData();
+})
+
+
+function displayData(){
+  dataArray = getFromLocalStorage();
+   showUl.innerHTML = '';
+
+    dataArray.forEach((data, index) => {
+        const listItem = document.createElement('li');
+        listItem.innerHTML = `
+            ${index + 1},&#8377 ${data.amount}, ${data.title}, ${data.categ} 
+            <button class="edit-button rounded" data-index="${index}">Edit</button> 
+            <button class="delete-button rounded" data-index="${index}">Delete</button>`;
+        showUl.appendChild(listItem);
+    });
+}
+
+showUl.addEventListener('click', (e) => {
+    if (e.target.classList.contains('edit-button')) {
+        const index = e.target.getAttribute('data-index');
+        const editedData = dataArray[index];
+
+        inputAmount.value = editedData.amount;
+        inputTitle.value = editedData.title;
+
+        for (let cat of category) {
+            if (cat.value === editedData.category) {
+                cat.checked = true;
+            }
+        }
+
+        dataArray.splice(index, 1);
+        updateLocalStorage(dataArray);
+
+        displayData();
+    } 
+    else if (e.target.classList.contains('delete-button')) {
+        const index = e.target.getAttribute('data-index');
+        dataArray.splice(index, 1);
+        updateLocalStorage(dataArray);
+        displayData();
+    }
+});
+
+displayData();
+
+
+    </script>
+  </body>
 </html>

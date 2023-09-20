@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CRUD Example</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  <form id="myForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required><br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div id="dataContainer"></div>
+
+  <script>
+    const form = document.getElementById('myForm');
+    const dataContainer = document.getElementById('dataContainer');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+
+      axios.post('https://crudcrud.com/api/ad17a3dc47ef42568377b05dd9e3da87/data', { name, email })
+        .then((response) => {
+          console.log(response.data);
+          fetchData();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+
+    function fetchData() {
+      axios.get('https://crudcrud.com/api/ad17a3dc47ef42568377b05dd9e3da87/data')
+        .then((response) => {
+          const data = response.data;
+          let html = '';
+
+          data.forEach((item) => {
+            html += `<p>Name: ${item.name}</p>`;
+            html += `<p>Email: ${item.email}</p>`;
+            html += `<button onclick="deleteData('${item._id}')">Delete</button>`;
+            html += '<hr>';
+          });
+
+          dataContainer.innerHTML = html;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    function deleteData(id) {
+      axios.delete(`https://crudcrud.com/api/ad17a3dc47ef42568377b05dd9e3da87/data/${id}`)
+        .then((response) => {
+          console.log(response.data);
+          fetchData();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    fetchData();
+  </script>
+</body>
+</html>
